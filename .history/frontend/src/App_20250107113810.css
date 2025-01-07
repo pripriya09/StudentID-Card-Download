@@ -1,0 +1,109 @@
+.App {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+form input, form button {
+  margin: 10px;
+  padding: 8px;
+}
+
+/* General styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+input[type="file"] {
+  border: none;
+  background-color: transparent;
+}
+
+button {
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+h3 {
+  text-align: center;
+  color: #333;
+}
+
+.id-card {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #fafafa;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.id-card p {
+  font-size: 16px;
+  color: #333;
+}
+
+.profile-image {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.profile-image img {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+button {
+  display: inline-block;
+  margin-top: 10px;
+  background-color: #007bff;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button + button {
+  margin-left: 10px;
+}

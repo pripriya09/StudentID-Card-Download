@@ -1,0 +1,87 @@
+/* General styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+
+
+/* Form styling */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="file"] {
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* ID card styling */
+.id-card {
+  display: flex;
+  max-width: 400px; /* Reduced width to ensure better scaling */
+  height: 250px; /* Adjust height for balance */
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.right {
+  flex: 2;
+  padding-left: 15px;
+}
+
+.left img {
+  width: 70px; /* Reduced image size */
+  height: 70px;
+  border-radius: 50%;
+}
+
+h3 {
+  margin-top: 0;
+}
+
+button {
+  margin-top: 10px;
+  background-color: #007BFF;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+p {
+  font-size: 12px; /* Smaller font size for better fit in PDF */
+  line-height: 1.4;
+}
