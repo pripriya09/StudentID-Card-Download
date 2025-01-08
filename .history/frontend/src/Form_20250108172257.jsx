@@ -5,6 +5,7 @@ import html2canvas from "html2canvas"; // Import html2canvas
 import "./App.css";
 
 const Form = () => {
+  const [count, setCount] = useState(1); // Number of ID cards
   const [formData, setFormData] = useState({
     name: "",
     fatherName: "",
@@ -119,6 +120,18 @@ const Form = () => {
   return (
     
     <div className="App">
+            <div>
+        <label>
+          Select Number of ID Cards:
+          <input
+            type="number"
+            min="1"
+            max="6"
+            // value={count}
+            // onChange={handleCountChange}
+          />
+        </label>
+      </div>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -176,7 +189,7 @@ const Form = () => {
         <button type="submit">Register</button>
       </form>
       {/* -----------------------------------------------------------display------------------code------- */}
-  
+      <h1>id card</h1>
       <div className="student_id">
         <div className="top_section">
           <div className="profile_photo">

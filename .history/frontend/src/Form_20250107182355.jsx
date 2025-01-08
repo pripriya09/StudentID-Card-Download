@@ -10,20 +10,13 @@ const Form = () => {
     fatherName: "",
     phoneNumber: "",
     image: null,
-    address:"",
-    consent: false, // Added consent field
   });
   const [studentData, setStudentData] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
-  // const [isConsentChecked,setIsConsent]
   const fileInputRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.consent) {
-      alert("You must agree to the terms and conditions!");
-      return;
-    }
     try {
       const response = await axios.post(
         "http://localhost:6009/api/students",
@@ -45,8 +38,6 @@ const Form = () => {
         fatherName: "",
         phoneNumber: "",
         image: null,
-        address:"",
-        consent: false,
       });
       setPreviewImage(null);
       if (fileInputRef.current) {
@@ -57,11 +48,7 @@ const Form = () => {
     }
   };
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-  
-    if (type === "checkbox") {
-      setFormData({ ...formData, [name]: checked }); // Convert "checked" to true/false
-    } else if (name === "image") {
+    if (e.target.name === "image") {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -71,10 +58,9 @@ const Form = () => {
       };
       reader.readAsDataURL(file);
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData({ ...formData, [e.target.name]: e.target.value });
     }
   };
-  
 
   const handleDownloadPDF = () => {
     const idCardElement = document.querySelector(".student_id");
@@ -117,8 +103,8 @@ const Form = () => {
   };
 
   return (
-    
     <div className="App">
+  
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -151,32 +137,27 @@ const Form = () => {
           required
           ref={fileInputRef}
         />
-        
-        <input
-          type="text"
-          name="address"
-          placeholder="address"
-          value={formData.address}
+
+         <input
+          type="reference"
+          name="reference"
+          placeholder="reference"
+          value={formData.name}
           onChange={handleChange}
           required
         />
-
-<div className="consent">
-          <label>
-            <input
-              type="checkbox"
-              name="consent"
-              checked={formData.consent}
-              onChange={handleChange}
-              required
-            />
-            I agree to the terms and conditions for creating the ID card
-          </label>
-        </div>
+        
+        <input
+          type="text"
+          name="adress"
+          placeholder="reference"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
         <button type="submit">Register</button>
       </form>
       {/* -----------------------------------------------------------display------------------code------- */}
-  
       <div className="student_id">
         <div className="top_section">
           <div className="profile_photo">
@@ -199,7 +180,6 @@ const Form = () => {
                 <p>Name - {studentData.name}</p>
                 <p>Father's Name - {studentData.fatherName}</p>
                 <p>Phone Number - {studentData.phoneNumber}</p>
-                <p>Address - {studentData.address}</p>
                 <p>Reg. No. - {studentData.registrationNumber}</p>
               </>
             ) : (
@@ -207,7 +187,6 @@ const Form = () => {
                 <p>Name - {formData.name || "John Doe"}</p>
                 <p>Father's Name - {formData.fatherName || "Father Name"}</p>
                 <p>Phone Number - {formData.phoneNumber || "000-000-0000"}</p>
-                <p> Address -{formData.address || "Address123"}</p>
                 <p>Reg. No. - Demo-12345</p>
               </>
             )}

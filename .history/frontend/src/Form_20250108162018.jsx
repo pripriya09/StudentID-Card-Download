@@ -119,6 +119,7 @@ const Form = () => {
   return (
     
     <div className="App">
+for
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -176,7 +177,6 @@ const Form = () => {
         <button type="submit">Register</button>
       </form>
       {/* -----------------------------------------------------------display------------------code------- */}
-  
       <div className="student_id">
         <div className="top_section">
           <div className="profile_photo">

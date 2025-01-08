@@ -26,7 +26,7 @@ const studentSchema = new mongoose.Schema({
   registrationNumber: { type: String, unique: true, required: true },
   image: { type: String },  
   address:{type: String},
-  consent: { type: Boolean, required: true },
+  consent: { type: Boolean, default: false }, 
 });
 
 const Student = mongoose.model('Studentcard', studentSchema);
@@ -34,14 +34,12 @@ const Student = mongoose.model('Studentcard', studentSchema);
 
 app.post('/api/students', async (req, res) => {
   const { name, fatherName, phoneNumber, image,address,consent} = req.body;
-
+  
+  formData
   if (!name || !fatherName || !phoneNumber || !image || !address) {
     return res.status(400).json({ error: 'All fields including image are required' });
   }
 
-  if (!consent) {
-    return res.status(400).json({ message: "Consent is required." });
-  }
   const newStudent = new Student({
     name,
     fatherName,
@@ -49,7 +47,7 @@ app.post('/api/students', async (req, res) => {
     registrationNumber: `${Date.now()}`,
     image,
     address,
-    consent
+    consent,
   });
 
   try {

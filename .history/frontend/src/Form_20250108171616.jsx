@@ -176,7 +176,7 @@ const Form = () => {
         <button type="submit">Register</button>
       </form>
       {/* -----------------------------------------------------------display------------------code------- */}
-  
+      <h1></h1>
       <div className="student_id">
         <div className="top_section">
           <div className="profile_photo">

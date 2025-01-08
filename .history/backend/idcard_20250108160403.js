@@ -49,7 +49,6 @@ app.post('/api/students', async (req, res) => {
     registrationNumber: `${Date.now()}`,
     image,
     address,
-    consent
   });
 
   try {

@@ -117,8 +117,11 @@ const Form = () => {
   };
 
   return (
-    
+    <label for="passengerCount">Select Number of Passengers:</label>
+<input type="number" id="passengerCount" min="1" max="6" onchange="generatePassengerForms()">
+
     <div className="App">
+  
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -176,7 +179,6 @@ const Form = () => {
         <button type="submit">Register</button>
       </form>
       {/* -----------------------------------------------------------display------------------code------- */}
-  
       <div className="student_id">
         <div className="top_section">
           <div className="profile_photo">

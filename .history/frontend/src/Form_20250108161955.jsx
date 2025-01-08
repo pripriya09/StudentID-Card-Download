@@ -119,6 +119,14 @@ const Form = () => {
   return (
     
     <div className="App">
+<div class="form-group">
+  <label for=""></label>
+  <select multiple class="form-control" name="" id="">
+    <option></option>
+    <option></option>
+    <option></option>
+  </select>
+</div>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -176,7 +184,6 @@ const Form = () => {
         <button type="submit">Register</button>
       </form>
       {/* -----------------------------------------------------------display------------------code------- */}
-  
       <div className="student_id">
         <div className="top_section">
           <div className="profile_photo">

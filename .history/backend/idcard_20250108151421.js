@@ -19,44 +19,45 @@ mongoose.connect("mongodb://127.0.0.1:27017/studentcardID")
   .catch((err) => console.log(err));
 
 
-const studentSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  fatherName: { type: String, required: true },
-  phoneNumber: { type: String, required: true },
-  registrationNumber: { type: String, unique: true, required: true },
-  image: { type: String },  
-  address:{type: String},
-  consent: { type: Boolean, required: true },
-});
+  const studentSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    fatherName: { type: String, required: true },
+    phoneNumber: { type: String, required: true },
+    image: { type: String, required: true },
+    address: { type: String, required: true },
+    consent: { type: Boolean, default: false }, // New consent field
+    registrationNumber: { type: String, unique: true, required: true },
+  });
+  
+  module.exports = mongoose.model("Student", studentSchema);
+  
 
 const Student = mongoose.model('Studentcard', studentSchema);
 
+app.post("/api/students", async (req, res) => {
+  const { name, fatherName, phoneNumber, image, address, consent } = req.body;
 
-app.post('/api/students', async (req, res) => {
-  const { name, fatherName, phoneNumber, image,address,consent} = req.body;
-
-  if (!name || !fatherName || !phoneNumber || !image || !address) {
-    return res.status(400).json({ error: 'All fields including image are required' });
-  }
-
+  // Validate consent
   if (!consent) {
-    return res.status(400).json({ message: "Consent is required." });
+    return res.status(400).json({ error: "Consent is required." });
   }
-  const newStudent = new Student({
+
+  // Proceed with storing data in the database
+  const newStudent = {
     name,
     fatherName,
     phoneNumber,
-    registrationNumber: `${Date.now()}`,
     image,
     address,
-    consent
-  });
+    registrationNumber: generateRegistrationNumber(), // Function to generate reg. number
+  };
 
+  // Save to database (example code)
   try {
-    const savedStudent = await newStudent.save();
-    res.json({ registrationNumber: savedStudent.registrationNumber });
-  } catch (err) {
-    res.status(400).json({ error: 'Error saving student data' });
+    await Student.create(newStudent);
+    res.status(201).json(newStudent);
+  } catch (error) {
+    res.status(500).json({ error: "Error saving student data" });
   }
 });
 

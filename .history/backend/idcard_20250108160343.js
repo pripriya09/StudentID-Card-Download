@@ -33,7 +33,7 @@ const Student = mongoose.model('Studentcard', studentSchema);
 
 
 app.post('/api/students', async (req, res) => {
-  const { name, fatherName, phoneNumber, image,address,consent} = req.body;
+  const { name, fatherName, phoneNumber, image,address} = req.body;
 
   if (!name || !fatherName || !phoneNumber || !image || !address) {
     return res.status(400).json({ error: 'All fields including image are required' });
@@ -49,7 +49,6 @@ app.post('/api/students', async (req, res) => {
     registrationNumber: `${Date.now()}`,
     image,
     address,
-    consent
   });
 
   try {
