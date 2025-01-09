@@ -79,7 +79,7 @@ app.get('/api/students/:registrationNumber', async (req, res) => {
   const { registrationNumber } = req.params;
 
   try {
-    const student = await Student.findOne({ registrationNumber });
+    const student = await Student.find({ registrationNumber });
     if (student) {
       const studentData = {
         ...student.toObject(),

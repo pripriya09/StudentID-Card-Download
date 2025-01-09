@@ -166,7 +166,7 @@ const handleDownloadPDF = () => {
         <input
           type="number"
           min="1"
-          max="10"
+          max="1"
           value={count}
           onChange={handleCountChange}
         />

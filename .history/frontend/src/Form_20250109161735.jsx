@@ -84,7 +84,7 @@ const handleSubmit = async (e) => {
       };
     });
 
- 
+    // Send data to the backend
     const response = await axios.post("http://localhost:6009/api/students", {
       passengers: formDataToSubmit,
     });
@@ -159,14 +159,14 @@ const handleDownloadPDF = () => {
 };
 
   return (
-    <div className="maincontainer">
+    .maincontainer
     <div className="App">
       <label>
         Number of Passengers:
         <input
           type="number"
           min="1"
-          max="10"
+          max="6"
           value={count}
           onChange={handleCountChange}
         />
@@ -262,7 +262,6 @@ const handleDownloadPDF = () => {
           </div>
           </> ))}
     
-    </div>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -33,46 +34,32 @@ const Student = mongoose.model('Studentcard', studentSchema);
 
 
 app.post('/api/students', async (req, res) => {
-  const passengers = req.body.passengers;
+  const { name, fatherName, phoneNumber, image,address,consent} = req.body;
 
-  if (!Array.isArray(passengers) || passengers.length === 0) {
-    return res.status(400).json({ error: 'No passengers provided' });
+  if (!name || !fatherName || !phoneNumber || !image || !address) {
+    return res.status(400).json({ error: 'All fields including image are required' });
   }
+
+  if (!consent) {
+    return res.status(400).json({ message: "Consent is required." });
+  }
+  const newStudent = new Student({
+    name,
+    fatherName,
+    phoneNumber,
+    registrationNumber: `${Date.now()}`,
+    image,
+    address,
+    consent
+  });
 
   try {
-    const savedPassengers = [];
-    
-    // Loop over each passenger and save them
-    for (const passenger of passengers) {
-      const { name, fatherName, phoneNumber, image, address, consent } = passenger;
-
-      if (!name || !fatherName || !phoneNumber || !image || !address || consent === undefined) {
-        return res.status(400).json({ error: 'All fields including image and consent are required' });
-      }
-
-      const newStudent = new Student({
-        name,
-        fatherName,
-        phoneNumber,
-        registrationNumber: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-        image,
-        address,
-        consent
-      });
-
-      const savedStudent = await newStudent.save();
-      savedPassengers.push({
-        registrationNumber: savedStudent.registrationNumber,
-      });
-    }
-
-    res.json({ registrationNumbers: savedPassengers.map(student => student.registrationNumber) });
+    const savedStudent = await newStudent.save();
+    res.json({ registrationNumber: savedStudent.registrationNumber });
   } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: 'Error saving passenger data' });
+    res.status(400).json({ error: 'Error saving student data' });
   }
 });
-
 
 // GET endpoint to retrieve student data by registration number
 app.get('/api/students/:registrationNumber', async (req, res) => {
