@@ -221,7 +221,7 @@ const Form = () => {
         </div>
         <div className="passanger-count">
         <label>
-          Number of Passengers :
+          Number of Passengers:
           <input
   type="number"
   min="1"

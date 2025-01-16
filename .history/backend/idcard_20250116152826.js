@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-// import { nanoid } from "nanoid"; // Import nanoid for unique ID generation
+import { nanoid } from "nanoid"; // Import nanoid for unique ID generation
 
 const app = express();
 const port = 6009;
@@ -37,7 +37,7 @@ const studentSchema = new mongoose.Schema({
 
 const Student = mongoose.model("Studentcard", studentSchema);
 
-let lastRegistrationNumber = 0;  // Start from 9 (SKSSS0009)
+let lastRegistrationNumber = 9;  // Start from 9 (SKSSS0009)
 
 const generateRandomPrefix = () => {
   const letters = "SKSSS";
@@ -67,7 +67,7 @@ app.post("/api/students", async (req, res) => {
     const savedPassengers = [];
 
     for (const passenger of passengers) {
-      const { name, fatherName, phoneNumber, image, address, disease, reference } = passenger;
+      const { name, fatherName, phoneNumber, image, address, disease, refernce } = passenger;
 
       if (!name || !fatherName || !phoneNumber || !image || !address || !disease || !reference) {
         return res.status(400).json({ error: "All fields including image are required." });
@@ -99,6 +99,7 @@ app.post("/api/students", async (req, res) => {
         registrationNumber: savedStudent.registrationNumber,
       });
     }
+
     res.json({ registrationNumbers: savedPassengers.map((student) => student.registrationNumber) });
   } catch (err) {
     console.error("Error saving passengers:", err);

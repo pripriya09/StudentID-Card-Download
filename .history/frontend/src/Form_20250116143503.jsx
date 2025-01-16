@@ -135,10 +135,10 @@ const Form = () => {
       alert("Please register all passengers before downloading the ID cards.");
       return;
     }
-  
+
     const pdf = new jsPDF();
     const idCardElements = document.querySelectorAll(".id-card-table");
-  
+
     Promise.all(
       Array.from(idCardElements).map((card) =>
         html2canvas(card, { scale: 1 }).then((canvas) =>
@@ -148,7 +148,7 @@ const Form = () => {
     ).then((images) => {
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-  
+
       // Define ID card dimensions and spacing
       const cardWidth = 100; // Set desired width for the ID card
       const cardHeight = 60; // Set desired height for the ID card
@@ -156,22 +156,22 @@ const Form = () => {
       const cardsPerRow = Math.floor(
         (pdfWidth - margin) / (cardWidth + margin)
       );
-  
+
       let x = margin;
       let y = margin;
-  
+
       images.forEach((imgData, index) => {
         // Add image to the PDF
         pdf.addImage(imgData, "PNG", x, y, cardWidth, cardHeight);
-  
+
         // Update x and y for the next card
         x += cardWidth + margin;
-  
+
         // Move to the next row if the current row is full
         if ((index + 1) % cardsPerRow === 0) {
           x = margin;
           y += cardHeight + margin;
-  
+
           // Add a new page if the current page is full
           if (y + cardHeight + margin > pdfHeight) {
             pdf.addPage();
@@ -179,34 +179,29 @@ const Form = () => {
           }
         }
       });
-  
+
       // Save the PDF
       pdf.save("Passenger_ID_Cards.pdf");
-  
-      // Reset form to default state after download
-      setFormData([
-        {
-          name: "",
-          fatherName: "",
-          phoneNumber: "",
-          address: "",
-          disease: "",
-          reference: "",
-          image: null,
-          registrationNumber: "",
-        },
-      ]);
-      setConsent(false); // Reset consent checkbox
-      setCount(1); // Set passenger count back to 1
-  
-      // Reset file inputs (clear image fields)
-      if (fileInputRefs.current) {
-        fileInputRefs.current.forEach((ref) => (ref.value = "")); // Clear file inputs
-      }
-      setIsSubmitted(false); 
     });
+    setFormData((prevData) =>
+      prevData.map((data) => ({
+        ...data,
+        name: "",
+        fatherName: "",
+        phoneNumber: "",
+        address: "",
+        disease: "",
+        reference: "",
+        image: null, // Reset image
+        registrationNumber: "",
+      }))
+    );
+    setConsent("")
+    // Reset file inputs (clear image fields)
+    if (fileInputRefs.current) {
+      fileInputRefs.current.forEach((ref) => (ref.value = "")); // Clear file inputs
+    }
   };
-  
 
   return (
     <div className="maincontainer">
@@ -219,9 +214,8 @@ const Form = () => {
         <h1>श्री खाटू श्याम सेवादार समिति, जयपुर - रजि.</h1>
         <p>विशाल द्वितीय निशान यात्रा रिंगस से खाटू धाम, 13 फरवरी 2025 को श्री खाटू श्याम बाबा की भव्य और विराट पैदल निशान यात्रा का आयोजन किया जा रहा है। यात्रा बस द्वारा रींगस तक पहुंचेगी, और वहां से निशान के साथ पैदल यात्रा शुरू होगी। यह यात्रा आपके लिए बाबा श्याम की कृपा और आशीर्वाद का एक अनमोल अवसर है।</p>
         </div>
-        <div className="passanger-count">
         <label>
-          Number of Passengers :
+          Number of Passengers:
           <input
   type="number"
   min="1"
@@ -244,8 +238,8 @@ const Form = () => {
   }}
   required
 />
-</label>
-</div>
+
+        </label>
         <form onSubmit={handleSubmit}>
           {formData.map((data, index) => (
             <div key={index} className="passenger-form">

@@ -3,8 +3,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #fcf9f9;
-  background-image: url("/shyam.jpg");
+  background-color: #f4f4f4;
 }
 .maincontainer{
   max-width: 1280px;
@@ -24,12 +23,6 @@ body {
 border: 1px solid rgb(218, 220, 224);
 border-radius: 8px;
 padding: 12px;
-}
-.passanger-count{
- text-align: center;
- margin-top: 20px;
- font-weight: 600;
- gap: 10px;
 }
 .form-field {
   display: flex;
@@ -98,12 +91,10 @@ form button {
 .header-pic img{
   width: 100%;
 }
-.header-txt{
-  background-color: #fff;
-  border: 1px solid rgb(218, 220, 224);
-  border-radius: 8px;
-}
 
+background-color: #fff;
+border: 1px solid rgb(218, 220, 224);
+border-radius: 8px;
 .header-txt h1{
   font-size: 60px;
   text-align: center;

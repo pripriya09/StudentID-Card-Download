@@ -235,7 +235,7 @@ const Form = () => {
       setCount(""); 
     } else {
       const numericValue = Math.min(Math.max(parseInt(value, 10), 1), 10); 
-      if(numericValue>10){
+      if(numericValue >10){
    alert("only 10 passengers are allowed")
       }
       

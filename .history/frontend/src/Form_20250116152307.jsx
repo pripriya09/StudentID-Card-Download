@@ -221,7 +221,7 @@ const Form = () => {
         </div>
         <div className="passanger-count">
         <label>
-          Number of Passengers :
+          Number of Passengers:
           <input
   type="number"
   min="1"
@@ -244,8 +244,8 @@ const Form = () => {
   }}
   required
 />
-</label>
-</div>
+
+        </label>
         <form onSubmit={handleSubmit}>
           {formData.map((data, index) => (
             <div key={index} className="passenger-form">

@@ -132,81 +132,78 @@ const Form = () => {
   const handleDownloadPDF = () => {
     // Check if all passengers have a valid registration number
     if (formData.some((data) => !data.registrationNumber)) {
-      alert("Please register all passengers before downloading the ID cards.");
-      return;
+        alert("Please register all passengers before downloading the ID cards.");
+        return;
     }
-  
-    const pdf = new jsPDF();
-    const idCardElements = document.querySelectorAll(".id-card-table");
-  
-    Promise.all(
-      Array.from(idCardElements).map((card) =>
-        html2canvas(card, { scale: 1 }).then((canvas) =>
-          canvas.toDataURL("image/png")
-        )
-      )
-    ).then((images) => {
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-  
-      // Define ID card dimensions and spacing
-      const cardWidth = 100; // Set desired width for the ID card
-      const cardHeight = 60; // Set desired height for the ID card
-      const margin = 3; // Margin between cards
-      const cardsPerRow = Math.floor(
-        (pdfWidth - margin) / (cardWidth + margin)
-      );
-  
-      let x = margin;
-      let y = margin;
-  
-      images.forEach((imgData, index) => {
-        // Add image to the PDF
-        pdf.addImage(imgData, "PNG", x, y, cardWidth, cardHeight);
-  
-        // Update x and y for the next card
-        x += cardWidth + margin;
-  
-        // Move to the next row if the current row is full
-        if ((index + 1) % cardsPerRow === 0) {
-          x = margin;
-          y += cardHeight + margin;
-  
-          // Add a new page if the current page is full
-          if (y + cardHeight + margin > pdfHeight) {
-            pdf.addPage();
-            y = margin;
-          }
-        }
-      });
-  
-      // Save the PDF
-      pdf.save("Passenger_ID_Cards.pdf");
-  
-      // Reset form to default state after download
-      setFormData([
-        {
-          name: "",
-          fatherName: "",
-          phoneNumber: "",
-          address: "",
-          disease: "",
-          reference: "",
-          image: null,
-          registrationNumber: "",
-        },
-      ]);
-      setConsent(false); // Reset consent checkbox
-      setCount(1); // Set passenger count back to 1
-  
-      // Reset file inputs (clear image fields)
-      if (fileInputRefs.current) {
-        fileInputRefs.current.forEach((ref) => (ref.value = "")); // Clear file inputs
-      }
-      setIsSubmitted(false); 
+
+    const cardWidth = 100; // Width of a single card
+    const cardHeight = 60; // Height of a single card
+    const margin = 3; // Margin between cards
+    const cardsPerColumn = 5; // Maximum number of cards per column
+    const columns = Math.ceil(formData.length / cardsPerColumn); // Calculate number of columns
+    const rows = formData.length < cardsPerColumn ? formData.length : cardsPerColumn; // Adjust rows dynamically for fewer cards
+
+    // Dynamically calculate PDF size
+    const pdfWidth = columns * (cardWidth + margin) + margin; // Total width
+    const pdfHeight = rows * (cardHeight + margin) + margin; // Total height based on actual rows
+
+    // Initialize jsPDF with custom size
+    const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: [pdfWidth, pdfHeight],
     });
-  };
-  
+
+    const idCardElements = document.querySelectorAll(".id-card-table");
+
+    Promise.all(
+        Array.from(idCardElements).map((card) =>
+            html2canvas(card, { scale: 1 }).then((canvas) =>
+                canvas.toDataURL("image/png")
+            )
+        )
+    ).then((images) => {
+        let x = margin; // Horizontal position
+        let y = margin; // Vertical position
+
+        images.forEach((imgData, index) => {
+            // Add image to the PDF
+            pdf.addImage(imgData, "PNG", x, y, cardWidth, cardHeight);
+
+            // Update y for the next card
+            y += cardHeight + margin;
+
+            // Move to the next column if the current column is full
+            if ((index + 1) % cardsPerColumn === 0) {
+                y = margin; // Reset y to top margin
+                x += cardWidth + margin; // Move to the next column
+            }
+        });
+
+        // Save the PDF
+        pdf.save("Passenger_ID_Cards.pdf");
+
+        // Reset the form to its initial state
+        setFormData([{
+            name: "",
+            fatherName: "",
+            phoneNumber: "",
+            address: "",
+            image: null,
+            disease: "",
+            reference: "",
+            registrationNumber: "",
+        }]);
+        setCount(1); // Reset the count to 1 (1 passenger)
+        setConsent(false); // Reset consent checkbox
+        // Reset file inputs (clear image fields)
+        if (fileInputRefs.current) {
+            fileInputRefs.current.forEach((ref) => (ref.value = "")); // Clear file inputs
+        }
+        setIsSubmitted(false); // Reset submission state
+    });
+};
+
 
   return (
     <div className="maincontainer">

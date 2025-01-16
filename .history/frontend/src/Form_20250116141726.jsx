@@ -24,33 +24,27 @@ const Form = () => {
   const fileInputRefs = useRef([]);
 
   const handleCountChange = (e) => {
-    let value = parseInt(e.target.value, 10);
-  
-    // Ensure value is within range 1 to 10
-    if (value < 1) {
-      value = 1;
-    } else if (value > 10) {
-      value = 10;
-    }
-  
-    // Update state
-    setCount(value);
-  
-    // Update the formData array to match the new count
-    setFormData((prev) =>
-      Array.from({ length: value }, (_, i) => prev[i] || {
-        name: "",
-        fatherName: "",
-        phoneNumber: "",
-        address: "",
-        image: "",
-        disease: "",
-        reference: "",
-        registrationNumber: "",
-      })
-    );
+    const newCount = parseInt(e.target.value, 10) || 1;
+    setCount(newCount);
+
+    // Adjust form data array length
+    setFormData((prevData) => {
+      const updatedFormData = [...prevData];
+      while (updatedFormData.length < newCount) {
+        updatedFormData.push({
+          name: "",
+          fatherName: "",
+          phoneNumber: "",
+          address: "",
+          image: null,
+          disease: "",
+          reference: "",
+          registrationNumber: "", // Add a registration number field
+        });
+      }
+      return updatedFormData.slice(0, newCount);
+    });
   };
-  
 
   const handleChange = (index, e) => {
     const { name, value, type, files } = e.target;
@@ -100,7 +94,7 @@ const Form = () => {
         };
       });
 
-      const response = await axios.post("http://localhost:6009/api/students", {
+      const response = await axios.post("http://192.168.0.38:6009/api/students", {
         passengers: formDataToSubmit,
         consent: consent,
       });
@@ -112,7 +106,7 @@ const Form = () => {
         setFormData((prevData) =>
           prevData.map((data, index) => ({
             ...data,
-            registrationNumber: response.data.registrationNumbers[index],
+            registrationNumber: response.data.registrationNumbers[index], // Assuming your backend returns registration numbers
           }))
         );
 
@@ -135,10 +129,10 @@ const Form = () => {
       alert("Please register all passengers before downloading the ID cards.");
       return;
     }
-  
+
     const pdf = new jsPDF();
     const idCardElements = document.querySelectorAll(".id-card-table");
-  
+
     Promise.all(
       Array.from(idCardElements).map((card) =>
         html2canvas(card, { scale: 1 }).then((canvas) =>
@@ -148,30 +142,30 @@ const Form = () => {
     ).then((images) => {
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-  
+
       // Define ID card dimensions and spacing
       const cardWidth = 100; // Set desired width for the ID card
       const cardHeight = 60; // Set desired height for the ID card
-      const margin = 3; // Margin between cards
+      const margin = 2; // Margin between cards
       const cardsPerRow = Math.floor(
         (pdfWidth - margin) / (cardWidth + margin)
       );
-  
+
       let x = margin;
       let y = margin;
-  
+
       images.forEach((imgData, index) => {
         // Add image to the PDF
         pdf.addImage(imgData, "PNG", x, y, cardWidth, cardHeight);
-  
+
         // Update x and y for the next card
         x += cardWidth + margin;
-  
+
         // Move to the next row if the current row is full
         if ((index + 1) % cardsPerRow === 0) {
           x = margin;
           y += cardHeight + margin;
-  
+
           // Add a new page if the current page is full
           if (y + cardHeight + margin > pdfHeight) {
             pdf.addPage();
@@ -179,34 +173,11 @@ const Form = () => {
           }
         }
       });
-  
+
       // Save the PDF
       pdf.save("Passenger_ID_Cards.pdf");
-  
-      // Reset form to default state after download
-      setFormData([
-        {
-          name: "",
-          fatherName: "",
-          phoneNumber: "",
-          address: "",
-          disease: "",
-          reference: "",
-          image: null,
-          registrationNumber: "",
-        },
-      ]);
-      setConsent(false); // Reset consent checkbox
-      setCount(1); // Set passenger count back to 1
-  
-      // Reset file inputs (clear image fields)
-      if (fileInputRefs.current) {
-        fileInputRefs.current.forEach((ref) => (ref.value = "")); // Clear file inputs
-      }
-      setIsSubmitted(false); 
     });
   };
-  
 
   return (
     <div className="maincontainer">
@@ -219,33 +190,16 @@ const Form = () => {
         <h1>श्री खाटू श्याम सेवादार समिति, जयपुर - रजि.</h1>
         <p>विशाल द्वितीय निशान यात्रा रिंगस से खाटू धाम, 13 फरवरी 2025 को श्री खाटू श्याम बाबा की भव्य और विराट पैदल निशान यात्रा का आयोजन किया जा रहा है। यात्रा बस द्वारा रींगस तक पहुंचेगी, और वहां से निशान के साथ पैदल यात्रा शुरू होगी। यह यात्रा आपके लिए बाबा श्याम की कृपा और आशीर्वाद का एक अनमोल अवसर है।</p>
         </div>
-        <div className="passanger-count">
         <label>
-          Number of Passengers :
+          Number of Passengers:
           <input
-  type="number"
-  min="1"
-  max="10"
-  value={count}
-  onChange={handleCountChange}
-  onInput={(e) => {
-    let value = e.target.value;
-    value = value.replace(/^0+/, "");
-    if (value === "" || isNaN(value)) {
-      setCount(""); 
-    } else {
-      const numericValue = Math.min(Math.max(parseInt(value, 10), 1), 10); 
-      if(numericValue>10){
-   alert("only 10 passengers are allowed")
-      }
-      
-      setCount(numericValue);
-    }
-  }}
-  required
-/>
-</label>
-</div>
+            type="number"
+            min="1"
+            max="10"
+            value={count}
+            onChange={handleCountChange}
+          />
+        </label>
         <form onSubmit={handleSubmit}>
           {formData.map((data, index) => (
             <div key={index} className="passenger-form">

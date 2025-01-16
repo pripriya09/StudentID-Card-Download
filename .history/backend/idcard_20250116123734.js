@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-// import { nanoid } from "nanoid"; // Import nanoid for unique ID generation
+import { nanoid } from "nanoid"; // Import nanoid for unique ID generation
 
 const app = express();
 const port = 6009;
@@ -37,18 +37,22 @@ const studentSchema = new mongoose.Schema({
 
 const Student = mongoose.model("Studentcard", studentSchema);
 
-let lastRegistrationNumber = 0;  // Start from 9 (SKSSS0009)
-
+// Function to generate a random 4-letter alphabetic prefix
 const generateRandomPrefix = () => {
-  const letters = "SKSSS";
-  return letters;
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let prefix = "";
+  for (let i = 0; i < 4; i++) {
+    const randomIndex = Math.floor(Math.random() * letters.length);
+    prefix += letters[randomIndex];
+  }
+  return prefix;
 };
 
+// Function to generate registration number
 const generateRegistrationNumber = () => {
-  // Increment the last registration number and format it to 4 digits with leading zeros
-  lastRegistrationNumber++;
-  const uniqueNumber = String(lastRegistrationNumber).padStart(4, '0');
-  return `${generateRandomPrefix()}${uniqueNumber}`;
+  const prefix = generateRandomPrefix();
+  const uniqueNumber = `${Date.now()}${Math.floor(Math.random() * 1000)}`.slice(-9);
+  return `${prefix}${uniqueNumber}`;
 };
 
 // Inside your /api/students endpoint
@@ -75,13 +79,6 @@ app.post("/api/students", async (req, res) => {
 
       const registrationNumber = generateRegistrationNumber();
 
-      // Check if the registration number already exists in the database (to avoid duplicates)
-      const existingStudent = await Student.findOne({ registrationNumber });
-
-      if (existingStudent) {
-        return res.status(400).json({ error: `Duplicate registration number ${registrationNumber}.` });
-      }
-
       const newStudent = new Student({
         name,
         fatherName,
@@ -95,11 +92,10 @@ app.post("/api/students", async (req, res) => {
       });
 
       const savedStudent = await newStudent.save();
-      savedPassengers.push({
-        registrationNumber: savedStudent.registrationNumber,
-      });
+      savedPassengers.push(savedStudent); // Push the full saved student object
     }
-    res.json({ registrationNumbers: savedPassengers.map((student) => student.registrationNumber) });
+
+    res.json(savedPassengers); // Return all saved passengers
   } catch (err) {
     console.error("Error saving passengers:", err);
     res.status(500).json({ error: "Internal server error." });
@@ -125,7 +121,3 @@ app.get("/api/students/:registrationNumber", async (req, res) => {
 });
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
-
-
-
-

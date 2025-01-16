@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-// import { nanoid } from "nanoid"; // Import nanoid for unique ID generation
+import { nanoid } from "nanoid"; // Import nanoid for unique ID generation
 
 const app = express();
 const port = 6009;
@@ -37,21 +37,7 @@ const studentSchema = new mongoose.Schema({
 
 const Student = mongoose.model("Studentcard", studentSchema);
 
-let lastRegistrationNumber = 0;  // Start from 9 (SKSSS0009)
-
-const generateRandomPrefix = () => {
-  const letters = "SKSSS";
-  return letters;
-};
-
-const generateRegistrationNumber = () => {
-  // Increment the last registration number and format it to 4 digits with leading zeros
-  lastRegistrationNumber++;
-  const uniqueNumber = String(lastRegistrationNumber).padStart(4, '0');
-  return `${generateRandomPrefix()}${uniqueNumber}`;
-};
-
-// Inside your /api/students endpoint
+// Endpoint to register students
 app.post("/api/students", async (req, res) => {
   const { passengers, consent } = req.body;
 
@@ -73,14 +59,8 @@ app.post("/api/students", async (req, res) => {
         return res.status(400).json({ error: "All fields including image are required." });
       }
 
-      const registrationNumber = generateRegistrationNumber();
-
-      // Check if the registration number already exists in the database (to avoid duplicates)
-      const existingStudent = await Student.findOne({ registrationNumber });
-
-      if (existingStudent) {
-        return res.status(400).json({ error: `Duplicate registration number ${registrationNumber}.` });
-      }
+      // Generate a unique registration number using nanoid
+      const registrationNumber = nanoid(12);
 
       const newStudent = new Student({
         name,
@@ -95,17 +75,15 @@ app.post("/api/students", async (req, res) => {
       });
 
       const savedStudent = await newStudent.save();
-      savedPassengers.push({
-        registrationNumber: savedStudent.registrationNumber,
-      });
+      savedPassengers.push(savedStudent); // Push the full saved student object
     }
-    res.json({ registrationNumbers: savedPassengers.map((student) => student.registrationNumber) });
+
+    res.json(savedPassengers); /
   } catch (err) {
     console.error("Error saving passengers:", err);
     res.status(500).json({ error: "Internal server error." });
   }
 });
-
 
 // Endpoint to retrieve student by registration number
 app.get("/api/students/:registrationNumber", async (req, res) => {
@@ -125,7 +103,3 @@ app.get("/api/students/:registrationNumber", async (req, res) => {
 });
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
-
-
-
-

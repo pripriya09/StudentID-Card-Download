@@ -37,7 +37,7 @@ const studentSchema = new mongoose.Schema({
 
 const Student = mongoose.model("Studentcard", studentSchema);
 
-let lastRegistrationNumber = 0;  // Start from 9 (SKSSS0009)
+let lastRegistrationNumber = ;  // Start from 9 (SKSSS0009)
 
 const generateRandomPrefix = () => {
   const letters = "SKSSS";

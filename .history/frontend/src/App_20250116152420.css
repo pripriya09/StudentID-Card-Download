@@ -3,8 +3,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #fcf9f9;
-  background-image: url("/shyam.jpg");
+  background-color: #f5ecec;
 }
 .maincontainer{
   max-width: 1280px;
@@ -27,9 +26,7 @@ padding: 12px;
 }
 .passanger-count{
  text-align: center;
- margin-top: 20px;
- font-weight: 600;
- gap: 10px;
+ with
 }
 .form-field {
   display: flex;

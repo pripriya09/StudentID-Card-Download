@@ -135,10 +135,26 @@ const Form = () => {
       alert("Please register all passengers before downloading the ID cards.");
       return;
     }
-  
-    const pdf = new jsPDF();
+
+    const cardWidth = 100; // Width of a single card
+    const cardHeight = 60; // Height of a single card
+    const margin = 3; // Margin between cards
+    const cardsPerRow = 5; // Number of cards per row
+    const rows = Math.ceil(formData.length / cardsPerRow); // Calculate number of rows
+
+    // Calculate required page size
+    const pdfWidth = cardsPerRow * (cardWidth + margin) + margin; // Total width
+    const pdfHeight = rows * (cardHeight + margin) + margin; // Total height
+
+    // Initialize jsPDF with custom size
+    const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: [pdfWidth, pdfHeight],
+    });
+
     const idCardElements = document.querySelectorAll(".id-card-table");
-  
+
     Promise.all(
       Array.from(idCardElements).map((card) =>
         html2canvas(card, { scale: 1 }).then((canvas) =>
@@ -146,67 +162,47 @@ const Form = () => {
         )
       )
     ).then((images) => {
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-  
-      // Define ID card dimensions and spacing
-      const cardWidth = 100; // Set desired width for the ID card
-      const cardHeight = 60; // Set desired height for the ID card
-      const margin = 3; // Margin between cards
-      const cardsPerRow = Math.floor(
-        (pdfWidth - margin) / (cardWidth + margin)
-      );
-  
       let x = margin;
       let y = margin;
-  
+
       images.forEach((imgData, index) => {
         // Add image to the PDF
         pdf.addImage(imgData, "PNG", x, y, cardWidth, cardHeight);
-  
+
         // Update x and y for the next card
         x += cardWidth + margin;
-  
+
         // Move to the next row if the current row is full
         if ((index + 1) % cardsPerRow === 0) {
           x = margin;
           y += cardHeight + margin;
-  
-          // Add a new page if the current page is full
-          if (y + cardHeight + margin > pdfHeight) {
-            pdf.addPage();
-            y = margin;
-          }
         }
       });
-  
+
       // Save the PDF
       pdf.save("Passenger_ID_Cards.pdf");
-  
-      // Reset form to default state after download
-      setFormData([
-        {
-          name: "",
-          fatherName: "",
-          phoneNumber: "",
-          address: "",
-          disease: "",
-          reference: "",
-          image: null,
-          registrationNumber: "",
-        },
-      ]);
+
+      // Reset the form to its initial state
+      setFormData([{
+        name: "",
+        fatherName: "",
+        phoneNumber: "",
+        address: "",
+        image: null,
+        disease: "",
+        reference: "",
+        registrationNumber: "",
+      }]);
+      setCount(1); // Reset the count to 1 (1 passenger)
       setConsent(false); // Reset consent checkbox
-      setCount(1); // Set passenger count back to 1
-  
       // Reset file inputs (clear image fields)
       if (fileInputRefs.current) {
         fileInputRefs.current.forEach((ref) => (ref.value = "")); // Clear file inputs
       }
-      setIsSubmitted(false); 
+      setIsSubmitted(false); // Reset submission state
     });
-  };
-  
+};
+
 
   return (
     <div className="maincontainer">
@@ -235,7 +231,7 @@ const Form = () => {
       setCount(""); 
     } else {
       const numericValue = Math.min(Math.max(parseInt(value, 10), 1), 10); 
-      if(numericValue>10){
+      if(numericValue > 10){
    alert("only 10 passengers are allowed")
       }
       

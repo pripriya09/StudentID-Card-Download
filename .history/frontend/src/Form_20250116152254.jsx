@@ -219,9 +219,9 @@ const Form = () => {
         <h1>श्री खाटू श्याम सेवादार समिति, जयपुर - रजि.</h1>
         <p>विशाल द्वितीय निशान यात्रा रिंगस से खाटू धाम, 13 फरवरी 2025 को श्री खाटू श्याम बाबा की भव्य और विराट पैदल निशान यात्रा का आयोजन किया जा रहा है। यात्रा बस द्वारा रींगस तक पहुंचेगी, और वहां से निशान के साथ पैदल यात्रा शुरू होगी। यह यात्रा आपके लिए बाबा श्याम की कृपा और आशीर्वाद का एक अनमोल अवसर है।</p>
         </div>
-        <div className="passanger-count">
+        .passanger-oun
         <label>
-          Number of Passengers :
+          Number of Passengers:
           <input
   type="number"
   min="1"
@@ -244,8 +244,8 @@ const Form = () => {
   }}
   required
 />
-</label>
-</div>
+
+        </label>
         <form onSubmit={handleSubmit}>
           {formData.map((data, index) => (
             <div key={index} className="passenger-form">

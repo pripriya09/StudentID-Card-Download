@@ -17,12 +17,10 @@ const Form = () => {
       image: null,
       disease: "",
       reference: "",
-      registrationNumber: "", // Add a registration number field
     }))
   );
   const [idCardData, setIdCardData] = useState(null);
   const fileInputRefs = useRef([]);
-
   const handleCountChange = (e) => {
     let value = parseInt(e.target.value, 10);
   
@@ -51,7 +49,6 @@ const Form = () => {
     );
   };
   
-
   const handleChange = (index, e) => {
     const { name, value, type, files } = e.target;
     setFormData((prevData) => {
@@ -70,64 +67,46 @@ const Form = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!consent) {
-      alert("Please provide consent for registration.");
-      return;
-    }
-    try {
-      const formDataToSubmit = formData.map((data) => {
-        const {
-          name,
-          fatherName,
-          phoneNumber,
-          address,
-          image,
-          consent,
-          disease,
-          reference,
-        } = data;
-        return {
-          name,
-          fatherName,
-          phoneNumber,
-          address,
-          image, // Base64 image
-          consent,
-          disease,
-          reference,
-        };
-      });
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!consent) {
+    alert("Please provide consent for registration.");
+    return;
+  }
+  try {
+    const formDataToSubmit = formData.map((data) => {
+      const { name, fatherName, phoneNumber, address, image, disease, reference } = data;
+      return { name, fatherName, phoneNumber, address, image, disease, reference };
+    });
 
-      const response = await axios.post("http://localhost:6009/api/students", {
-        passengers: formDataToSubmit,
-        consent: consent,
-      });
+    const response = await axios.post("http://localhost:6009/api/students", {
+      passengers: formDataToSubmit,
+      consent,
+    });
 
-      if (response.status === 200) {
-        alert("Passengers registered successfully.");
-        console.log("Response Data:", response.data);
+    if (response.status === 200) {
+      alert("Passengers registered successfully.");
+      console.log("Response Data:", response.data);
 
+      // Ensure registration numbers are populated for each passenger
+      if (response.data.registrationNumber && response.data.registrationNumber.length === formData.length) {
         setFormData((prevData) =>
           prevData.map((data, index) => ({
             ...data,
             registrationNumber: response.data.registrationNumbers[index],
           }))
         );
-
-        // Mark the form as successfully submitted
-        setIsSubmitted(true);
-      } else {
-        alert("Failed to register passengers. Please try again.");
       }
 
-      setIdCardData(formData);
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("An error occurred while submitting the form.");
+      setIsSubmitted(true);
+    } else {
+      alert("Failed to register passengers. Please try again.");
     }
-  };
+  } catch (error) {
+    console.error("Error submitting form:", error);
+    alert("An error occurred while submitting the form.");
+  }
+};
 
   const handleDownloadPDF = () => {
     // Check if all passengers have a valid registration number
@@ -135,10 +114,10 @@ const Form = () => {
       alert("Please register all passengers before downloading the ID cards.");
       return;
     }
-  
+
     const pdf = new jsPDF();
     const idCardElements = document.querySelectorAll(".id-card-table");
-  
+
     Promise.all(
       Array.from(idCardElements).map((card) =>
         html2canvas(card, { scale: 1 }).then((canvas) =>
@@ -148,7 +127,7 @@ const Form = () => {
     ).then((images) => {
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-  
+
       // Define ID card dimensions and spacing
       const cardWidth = 100; // Set desired width for the ID card
       const cardHeight = 60; // Set desired height for the ID card
@@ -156,22 +135,22 @@ const Form = () => {
       const cardsPerRow = Math.floor(
         (pdfWidth - margin) / (cardWidth + margin)
       );
-  
+
       let x = margin;
       let y = margin;
-  
+
       images.forEach((imgData, index) => {
         // Add image to the PDF
         pdf.addImage(imgData, "PNG", x, y, cardWidth, cardHeight);
-  
+
         // Update x and y for the next card
         x += cardWidth + margin;
-  
+
         // Move to the next row if the current row is full
         if ((index + 1) % cardsPerRow === 0) {
           x = margin;
           y += cardHeight + margin;
-  
+
           // Add a new page if the current page is full
           if (y + cardHeight + margin > pdfHeight) {
             pdf.addPage();
@@ -179,49 +158,48 @@ const Form = () => {
           }
         }
       });
-  
+
       // Save the PDF
       pdf.save("Passenger_ID_Cards.pdf");
-  
-      // Reset form to default state after download
-      setFormData([
-        {
-          name: "",
-          fatherName: "",
-          phoneNumber: "",
-          address: "",
-          disease: "",
-          reference: "",
-          image: null,
-          registrationNumber: "",
-        },
-      ]);
-      setConsent(false); // Reset consent checkbox
-      setCount(1); // Set passenger count back to 1
-  
-      // Reset file inputs (clear image fields)
-      if (fileInputRefs.current) {
-        fileInputRefs.current.forEach((ref) => (ref.value = "")); // Clear file inputs
-      }
-      setIsSubmitted(false); 
     });
+
+    setFormData((prevData) =>
+      prevData.map((data) => ({
+        ...data,
+        name: "",
+        fatherName: "",
+        phoneNumber: "",
+        address: "",
+        disease: "",
+        reference: "",
+        image: null, // Reset image
+        registrationNumber: "",
+      }))
+    );
+    setConsent("")
+    // Reset file inputs (clear image fields)
+    if (fileInputRefs.current) {
+      fileInputRefs.current.forEach((ref) => (ref.value = "")); // Clear file inputs
+    }
   };
-  
 
   return (
+
     <div className="maincontainer">
-      <div className="header"></div>
+      <div className="header">
+
+      </div>
       <div className="App content">
         <div className="header-pic">
           <img src="/khatu-shyam-banner.jpg" alt="" />
+        <div className="header-text">
+          <h1>श्री खाटू श्याम सेवादार समिति, जयपुर - रजि.</h1>
+          <p>विशाल द्वितीय निशान यात्रा रिंगस से खाटू धाम ,  13 फरवरी 2025 को श्री खाटू श्याम बाबा की भव्य और विराट पैदल निशान यात्रा का आयोजन किया जा रहा है। यात्रा बस द्वारा रींगस तक पहुंचेगी, और वहां से निशान के साथ पैदल यात्रा शुरू होगी। यह यात्रा आपके लिए बाबा श्याम की कृपा और आशीर्वाद का एक अनमोल अवसर है।  </p>
+          </div>
         </div>
-        <div className="header-txt">
-        <h1>श्री खाटू श्याम सेवादार समिति, जयपुर - रजि.</h1>
-        <p>विशाल द्वितीय निशान यात्रा रिंगस से खाटू धाम, 13 फरवरी 2025 को श्री खाटू श्याम बाबा की भव्य और विराट पैदल निशान यात्रा का आयोजन किया जा रहा है। यात्रा बस द्वारा रींगस तक पहुंचेगी, और वहां से निशान के साथ पैदल यात्रा शुरू होगी। यह यात्रा आपके लिए बाबा श्याम की कृपा और आशीर्वाद का एक अनमोल अवसर है।</p>
-        </div>
-        <div className="passanger-count">
-        <label>
-          Number of Passengers :
+      <div className="count-label">
+        <label >
+          Number of Passengers:
           <input
   type="number"
   min="1"
@@ -244,8 +222,8 @@ const Form = () => {
   }}
   required
 />
-</label>
-</div>
+
+        </label></div>
         <form onSubmit={handleSubmit}>
           {formData.map((data, index) => (
             <div key={index} className="passenger-form">
@@ -383,9 +361,11 @@ const Form = () => {
                 />
                 <p>मैंने सभी नियमों और दिशा-निर्देशों को ध्यानपूर्वक पढ़ लिया है और मैं इनका पूरी निष्ठा और अनुशासन के साथ पालन करूंगा/करूंगी।</p>
               </div>
-              <button type="submit">Register Passengers</button>
             </div>
           </label>
+          <div className="register-btn">
+          <button type="submit">Register Passengers</button>
+          </div>
         </form>
 
         <div className="download-pdf">
@@ -393,93 +373,150 @@ const Form = () => {
             Download Card in PDF
           </button>
         </div>
-
-        {/* Display ID Card after Successful Submission */}
         {isSubmitted && formData.map((data, index) => (
-  <table className="id-card-table" key={index} >
-    <tbody>
-      {/* First Row */}
-      <tr>
-      
-        <td colSpan="1" style={{ color: "red", fontWeight: 700, textAlign: "left", fontSize: "10px", whiteSpace: "nowrap" }}>
-          ॥ श्री खाटू श्याम देवाय नमः ॥
-        </td>
-        <td colSpan="2" style={{ color: "rgb(0, 0, 206)", fontWeight: 700, fontSize: "10px", textAlign: "right" }}>
-          रजि. नं. : COOPI2024 / JAIPURI206591
-        </td>
-      </tr>
-      
-      {/* Title Row */}
-      <tr>
-        <td colSpan="3" style={{ textAlign: "center", color: "rgb(255, 0, 0)", fontWeight: 900, fontSize: "26px" }}>
-          श्री खाटू श्याम सेवादार समिति
-        </td>
-      </tr>
-      
-      {/* Address Row */}
-      <tr>
-        <td colSpan="3" style={{ textAlign: "center", color: "rgb(0, 0, 0)", fontSize: "12px", fontWeight: 600 }}>
-          ए बी 468, दूसरी मंजिल, निर्माण नगर, किंग्स रोड़, अजमेर रोड़, जयपुर मो- 8905902495
-        </td>
-      </tr>
-      
-      {/* Event Row */}
-      <tr>
-        <td colSpan="3" style={{ textAlign: "center", color: "rgb(255, 0, 43)", fontWeight: 700, fontSize: "15px" }}>
-          रींगस से खाटूधाम पदयात्रा (दिनांक- 13 फरवरी 2025)
-        </td>
-      </tr>
-
-      {/* ID Card Details */}
-      <tr>
-        {/* Profile Image Column */}
-        <td colSpan="1" rowspan="5" style={{ textAlign: "center" }}>
-          <img src={data.image || './shyam.jpg'} className="profile-img" alt="Profile" />
-        </td>
-
-        {/* Registration Number */}
-        <td className="large-text" colSpan="2" style={{ color: "rgb(0, 0, 0)", fontWeight: 600, borderBottom: "dotted 1px rgb(58, 58, 58)" }}>
-          रजिस्ट्रेशन नं. - {data.registrationNumber}
-        </td>
-      </tr>
-      
-      {/* Name Row */}
-      <tr>
-        <td colSpan="2" className="large-text" style={{ color: "rgb(0, 0, 0)", fontWeight: 600, borderBottom: "dotted 1px rgb(58, 58, 58)"}}>
-          पदयात्री का नाम - {data.name}
-        </td>
-      </tr>
-      
-      {/* Father’s Name Row */}
-      <tr>
-        <td colSpan="3" className="large-text" style={{ color: "rgb(0, 0, 0)", fontWeight: 600, borderBottom: "1px dotted rgb(58, 58, 58)",  }}>
-          पिता का नाम - {data.fatherName}
-        </td>
-      </tr>
-      
-      {/* Phone Number Row */}
-      <tr>
-        <td colSpan="2" className="large-text" style={{ color: "rgb(0, 0, 0)", fontWeight: 600, borderBottom: "1px dotted rgb(58, 58, 58)",}}>
-          पदयात्री मोबाइल नं. - {data.phoneNumber}
-        </td>
-      </tr>
-      
-      {/* Address Row */}
-      <tr>
-        <td colSpan="2" className="large-text" style={{ color: "rgb(0, 0, 0)", fontWeight: 600, }}>
-          पदयात्री का पता - {data.address}
-        </td>
-      </tr>
-
-      {/* Contact Information Row */}
-      <tr>
-        <td colSpan="3" style={{ textAlign: "center", color: "rgb(12, 0, 177)", fontWeight: 700, fontSize: "13px", borderTop: "solid 2px black" }}>
-          सम्पर्क सूत्र : 8696555530, 9887662860, 9828156963, 6376999432, 9314476414, 9828256321, 9782676365
-        </td>
-      </tr>
-    </tbody>
-  </table>
-))}
+          <table
+            className="id-card-table"
+            key={index}
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              margin: "20px auto",
+            }}
+          >
+            <tbody>
+              <tr>
+                <td
+                  style={{ color: "red", fontWeight: 700, textAlign: "center", fontSize: "10px", whiteSpace: "nowrap" }}
+                >
+                  ॥ श्री खाटू श्याम देवाय नमः ॥
+                </td>
+                <td
+                  colSpan="2"
+                  style={{
+                    color: "rgb(0, 0, 206)",
+                    fontWeight: 700,
+                    fontSize: "10px",
+                    textAlign: "right",
+                  }}
+                >
+                  रजि. नं. : COOPI2024 / JAIPURI206591
+                </td>
+              </tr>
+              <tr>
+                <td
+                  colSpan="3"
+                  style={{
+                    textAlign: "center",
+                    color: "rgb(255, 0, 0)",
+                    fontWeight: 900,
+                    fontSize: "26px",
+                  }}
+                >
+                  श्री खाटू श्याम सेवादार समिति
+                </td>
+              </tr>
+              <tr>
+                <td
+                  colSpan="3"
+                  style={{
+                    textAlign: "center",
+                    color: "rgb(0, 0, 0)",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                  }}
+                >
+                  ए बी 468, दूसरी मंजिल, निर्माण नगर, किंग्स रोड़, अजमेर रोड़, जयपुर मो- 8905902495
+                </td>
+              </tr>
+              <tr>
+                <td
+                  colSpan="3"
+                  style={{
+                    textAlign: "center",
+                    color: "rgb(255, 0, 43)",
+                    fontWeight: 700,
+                    fontSize: "15px",
+                  }}
+                >
+                  रींगस से खाटूधाम पदयात्रा (दिनांक- 13 फरवरी 2025)
+                </td>
+              </tr>
+              <tr>
+                <td
+                  colSpan="3"
+                  style={{
+                    color: "rgb(0, 0, 0)",
+                    fontWeight: 600,
+                    borderBottom: "1px dotted rgb(58, 58, 58)",
+                  }}
+                >
+                  रजिस्ट्रेशन नं. - {data.registrationNumber}
+                </td>
+              </tr>
+              <tr>
+                <td
+                  colSpan="3"
+                  style={{
+                    color: "rgb(0, 0, 0)",
+                    fontWeight: 600,
+                    borderBottom: "1px dotted rgb(58, 58, 58)",
+                  }}
+                >
+                  पदयात्री का नाम - {data.name}
+                </td>
+              </tr>
+              <tr>
+                <td
+                  colSpan="3"
+                  style={{
+                    color: "rgb(0, 0, 0)",
+                    fontWeight: 600,
+                    borderBottom: "1px dotted rgb(58, 58, 58)",
+                  }}
+                >
+                  पिता का नाम - {data.fatherName}
+                </td>
+              </tr>
+              <tr>
+                <td
+                  colSpan="3"
+                  style={{
+                    color: "rgb(0, 0, 0)",
+                    fontWeight: 600,
+                    borderBottom: "1px dotted rgb(58, 58, 58)",
+                  }}
+                >
+                  मोबाईल नं. - +91:{data.phoneNumber}
+                </td>
+              </tr>
+              <tr>
+                <td
+                  colSpan="3"
+                  style={{
+                    color: "rgb(0, 0, 0)",
+                    fontWeight: 600,
+                  }}
+                >
+                  पदयात्री का पता - {data.address}
+                </td>
+              </tr>
+              <tr>
+                <td
+                  colSpan="3"
+                  style={{
+                    textAlign: "center",
+                    color: "rgb(12, 0, 177)",
+                    fontWeight: 700,
+                    fontSize: "13px",
+                    borderTop: "2px solid black",
+                  }}
+                >
+                  सम्पर्क सूत्र : 8696555530, 9887662860
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        ))}
 
       </div>
     </div>

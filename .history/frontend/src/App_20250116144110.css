@@ -3,8 +3,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #fcf9f9;
-  background-image: url("/shyam.jpg");
+  background-color: #f4f4f4;
 }
 .maincontainer{
   max-width: 1280px;
@@ -20,16 +19,7 @@ body {
   justify-content: space-between;
   gap: 20px;
   align-items: center;
-  background-color: #fff;
-border: 1px solid rgb(218, 220, 224);
-border-radius: 8px;
-padding: 12px;
-}
-.passanger-count{
- text-align: center;
- margin-top: 20px;
- font-weight: 600;
- gap: 10px;
+  
 }
 .form-field {
   display: flex;
@@ -98,12 +88,6 @@ form button {
 .header-pic img{
   width: 100%;
 }
-.header-txt{
-  background-color: #fff;
-  border: 1px solid rgb(218, 220, 224);
-  border-radius: 8px;
-}
-
 .header-txt h1{
   font-size: 60px;
   text-align: center;
@@ -156,7 +140,7 @@ table {
   max-width: 350px !important;
   padding: 15px !important;
   border-collapse: collapse;
-  background-color: rgb(240, 230, 230) !important;
+  background-color: rgb(240, 221, 221) !important;
   margin: 10px auto;
   border: solid 1px black;
 }
@@ -191,7 +175,6 @@ td {
 
 .centered-consent{
   margin: auto;
-
 }
 .terms{
   display: flex;
@@ -207,11 +190,7 @@ ol li {
 .agreement-text{
   background-color: #dddada;
   padding: 10px 20px;
-  background-color: #fff;
-  border: 1px solid rgb(218, 220, 224);
-  border-radius: 8px;
 }
-
 
 
 @media screen and (max-width: 900px) {

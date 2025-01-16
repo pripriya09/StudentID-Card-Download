@@ -1,18 +1,20 @@
-/* General styling */
+General styling
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #fcf9f9;
-  background-image: url("/shyam.jpg");
+  background-color:f0ebf8;
 }
 .maincontainer{
   max-width: 1280px;
   margin: auto;
+  /* background-color: rgb(199, 206, 206); */
+  padding: 10px 20px;
 }
 .content{
   margin-bottom: 20px;
 }
+
 .passenger-form {
   display: grid;
   margin: 20px 0px;
@@ -21,15 +23,11 @@ body {
   gap: 20px;
   align-items: center;
   background-color: #fff;
-border: 1px solid rgb(218, 220, 224);
-border-radius: 8px;
-padding: 12px;
-}
-.passanger-count{
- text-align: center;
- margin-top: 20px;
- font-weight: 600;
- gap: 10px;
+  padding: 10px;
+
+  border: 1px solid rgb(218, 220, 224);
+  border-radius: 8px;
+  margin-bottom: 12px;
 }
 .form-field {
   display: flex;
@@ -97,23 +95,16 @@ form button {
 }
 .header-pic img{
   width: 100%;
+
 }
-.header-txt{
-  background-color: #fff;
+.header-pic{
+  background-color:#fff ;
+
+}
+.header-text{
+  padding: 20px;
   border: 1px solid rgb(218, 220, 224);
   border-radius: 8px;
-}
-
-.header-txt h1{
-  font-size: 60px;
-  text-align: center;
-  font-weight: 900;
-  margin: 10px 0px;
-}
-.header-txt p{
-  text-align: center;
-  margin-bottom: 20px;
-
 }
 .student_info {
   list-style: none;
@@ -143,28 +134,28 @@ p {
   color: white;
   border-radius: 10px;
   margin: 15px 0px;
+  margin:20px auto;
 }
 
 /* -------------------------------------*/
-table {
-  width: 160%;
-  max-width: 160%;
+.count-label{
+text-align: center;
+margin-top: 20px;
 }
 .id-card-table {
   position: relative;
   width: 350px !important;
   max-width: 350px !important;
-  padding: 15px !important;
-  border-collapse: collapse;
-  background-color: rgb(240, 230, 230) !important;
-  margin: 10px auto;
-  border: solid 1px black;
-}
-.profile-img {
-  width: 120px;
-  object-fit: fill;
-  height: 120px;
-  border: solid 2px rgb(133, 46, 46);
+  height: 220px;
+  border: solid 1px #ccc;
+  padding: 5px;
+  background-color: #fff;
+  background-image: url("/shyam.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid rgb(218, 220, 224);
+  border-radius: 8px;
 }
 td {
   padding: 0px;
@@ -189,9 +180,11 @@ td {
   filter: drop-shadow(2px 1px 1px rgb(255, 230, 7));
 }
 
+.register-btn{
+  margin-top: 10px;
+}
 .centered-consent{
   margin: auto;
-
 }
 .terms{
   display: flex;
@@ -205,16 +198,14 @@ ol li {
   
 }
 .agreement-text{
-  background-color: #dddada;
+  background-color:#fff;
   padding: 10px 20px;
-  background-color: #fff;
   border: 1px solid rgb(218, 220, 224);
   border-radius: 8px;
 }
 
 
-
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 600px) {
   .passenger-form {
     display: grid;
     margin: 20px 0px;
@@ -230,10 +221,5 @@ ol li {
   }
   .content{
     padding: 20px;
-  }
-  .header-txt h1{
-    font-size: 25px;
-    text-align: center;
-    font-weight: 900;
   }
 }

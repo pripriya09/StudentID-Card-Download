@@ -4,7 +4,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #fcf9f9;
-  background-image: url("/shyam.jpg");
+  background-image: url("/shyam");
 }
 .maincontainer{
   max-width: 1280px;

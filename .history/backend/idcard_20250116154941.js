@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-// import { nanoid } from "nanoid"; // Import nanoid for unique ID generation
+import { nanoid } from "nanoid"; // Import nanoid for unique ID generation
 
 const app = express();
 const port = 6009;
@@ -37,7 +37,7 @@ const studentSchema = new mongoose.Schema({
 
 const Student = mongoose.model("Studentcard", studentSchema);
 
-let lastRegistrationNumber = 0;  // Start from 9 (SKSSS0009)
+let lastRegistrationNumber = 26;  // Start from 9 (SKSSS0009)
 
 const generateRandomPrefix = () => {
   const letters = "SKSSS";
@@ -81,7 +81,7 @@ app.post("/api/students", async (req, res) => {
       if (existingStudent) {
         return res.status(400).json({ error: `Duplicate registration number ${registrationNumber}.` });
       }
-
+console.log(existingStudent)
       const newStudent = new Student({
         name,
         fatherName,
@@ -99,6 +99,7 @@ app.post("/api/students", async (req, res) => {
         registrationNumber: savedStudent.registrationNumber,
       });
     }
+console.log(savedStudent)
     res.json({ registrationNumbers: savedPassengers.map((student) => student.registrationNumber) });
   } catch (err) {
     console.error("Error saving passengers:", err);
