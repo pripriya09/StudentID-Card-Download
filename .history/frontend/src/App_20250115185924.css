@@ -138,10 +138,7 @@ p {
 }
 
 /* -------------------------------------*/
-.count-label{
-text-align: center;
-margin-top: 20px;
-}
+
 .id-card-table {
   position: relative;
   width: 350px !important;
@@ -181,7 +178,7 @@ td {
 }
 
 .register-btn{
-  margin-top: 10px;
+  mar
 }
 .centered-consent{
   margin: auto;

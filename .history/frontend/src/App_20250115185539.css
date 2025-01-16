@@ -103,8 +103,6 @@ form button {
 }
 .header-text{
   padding: 20px;
-  border: 1px solid rgb(218, 220, 224);
-  border-radius: 8px;
 }
 .student_info {
   list-style: none;
@@ -138,10 +136,7 @@ p {
 }
 
 /* -------------------------------------*/
-.count-label{
-text-align: center;
-margin-top: 20px;
-}
+
 .id-card-table {
   position: relative;
   width: 350px !important;
@@ -180,9 +175,6 @@ td {
   filter: drop-shadow(2px 1px 1px rgb(255, 230, 7));
 }
 
-.register-btn{
-  margin-top: 10px;
-}
 .centered-consent{
   margin: auto;
 }
@@ -200,8 +192,6 @@ ol li {
 .agreement-text{
   background-color:#fff;
   padding: 10px 20px;
-  border: 1px solid rgb(218, 220, 224);
-  border-radius: 8px;
 }
 
 

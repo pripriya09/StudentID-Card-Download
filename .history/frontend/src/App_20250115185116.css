@@ -22,7 +22,7 @@ body {
   justify-content: space-between;
   gap: 20px;
   align-items: center;
-  background-color: #fff;
+  background-color: #dbd9d9;
   padding: 10px;
 
   border: 1px solid rgb(218, 220, 224);
@@ -98,13 +98,11 @@ form button {
 
 }
 .header-pic{
-  background-color:#fff ;
+  background-color:#dddada ;
 
 }
 .header-text{
   padding: 20px;
-  border: 1px solid rgb(218, 220, 224);
-  border-radius: 8px;
 }
 .student_info {
   list-style: none;
@@ -134,14 +132,11 @@ p {
   color: white;
   border-radius: 10px;
   margin: 15px 0px;
-  margin:20px auto;
+  margin: auto;
 }
 
 /* -------------------------------------*/
-.count-label{
-text-align: center;
-margin-top: 20px;
-}
+
 .id-card-table {
   position: relative;
   width: 350px !important;
@@ -149,13 +144,11 @@ margin-top: 20px;
   height: 220px;
   border: solid 1px #ccc;
   padding: 5px;
-  background-color: #fff;
+  background-color: #fff7f7;
   background-image: url("/shyam.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border: 1px solid rgb(218, 220, 224);
-  border-radius: 8px;
 }
 td {
   padding: 0px;
@@ -180,9 +173,6 @@ td {
   filter: drop-shadow(2px 1px 1px rgb(255, 230, 7));
 }
 
-.register-btn{
-  margin-top: 10px;
-}
 .centered-consent{
   margin: auto;
 }
@@ -198,10 +188,8 @@ ol li {
   
 }
 .agreement-text{
-  background-color:#fff;
+  background-color: #dddada;
   padding: 10px 20px;
-  border: 1px solid rgb(218, 220, 224);
-  border-radius: 8px;
 }
 
 

@@ -381,7 +381,7 @@ const Form = () => {
               </div>
             </div>
           </label>
-          <div className="register-btn">
+          <div className="-pdf">
           <button type="submit">Register Passengers</button>
           </div>
         </form>

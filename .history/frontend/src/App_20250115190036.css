@@ -138,10 +138,7 @@ p {
 }
 
 /* -------------------------------------*/
-.count-label{
-text-align: center;
-margin-top: 20px;
-}
+.count-label
 .id-card-table {
   position: relative;
   width: 350px !important;

@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import { nanoid } from "nanoid"; // Import nanoid for unique ID generation
 
 const app = express();
 const port = 6009;
@@ -15,6 +14,7 @@ app.use(
       "http://127.0.0.1:5173",
       "http://127.0.0.1:5174",
     ],
+
   })
 );
 
@@ -23,18 +23,20 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("Database connection error:", err));
 
+// Define the schema
 const studentSchema = new mongoose.Schema({
   name: { type: String, required: true },
   fatherName: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   registrationNumber: { type: String, unique: true, required: true },
-  image: { type: String },
+  image: { type: String }, // Base64 image
   address: { type: String, required: true },
   consent: { type: Boolean, required: true },
   disease: { type: String, required: true },
   reference: { type: String, required: true },
 });
 
+// Create the model
 const Student = mongoose.model("Studentcard", studentSchema);
 
 // Endpoint to register students
@@ -59,8 +61,8 @@ app.post("/api/students", async (req, res) => {
         return res.status(400).json({ error: "All fields including image are required." });
       }
 
-      // Generate a unique registration number using nanoid
-      const registrationNumber = nanoid(12);
+      // Generate a 12-digit registration number
+      const registrationNumber = `${Date.now()}${Math.floor(Math.random() * 1000)}`.slice(0, 12);
 
       const newStudent = new Student({
         name,
@@ -87,6 +89,7 @@ app.post("/api/students", async (req, res) => {
   }
 });
 
+
 // Endpoint to retrieve student by registration number
 app.get("/api/students/:registrationNumber", async (req, res) => {
   const { registrationNumber } = req.params;
@@ -104,4 +107,8 @@ app.get("/api/students/:registrationNumber", async (req, res) => {
   }
 });
 
+// Start the server
 app.listen(port, () => console.log(`Server running on port ${port}`));
+
+
+

@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import { nanoid } from "nanoid"; // Import nanoid for unique ID generation
+import { nanoid } from "nanoid";
 
 const app = express();
 const port = 6009;
@@ -28,7 +28,7 @@ const studentSchema = new mongoose.Schema({
   fatherName: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   registrationNumber: { type: String, unique: true, required: true },
-  image: { type: String },
+  image: { type: String }, // Base64 image
   address: { type: String, required: true },
   consent: { type: Boolean, required: true },
   disease: { type: String, required: true },
@@ -37,7 +37,6 @@ const studentSchema = new mongoose.Schema({
 
 const Student = mongoose.model("Studentcard", studentSchema);
 
-// Endpoint to register students
 app.post("/api/students", async (req, res) => {
   const { passengers, consent } = req.body;
 
@@ -49,57 +48,58 @@ app.post("/api/students", async (req, res) => {
     return res.status(400).json({ error: "No passengers provided." });
   }
 
+  if (passengers.length > 10) {
+    return res.status(400).json({ error: "You can register a maximum of 10 passengers at a time." });
+  }
+
   try {
     const savedPassengers = [];
+    const errors = [];
 
     for (const passenger of passengers) {
-      const { name, fatherName, phoneNumber, image, address, disease, reference } = passenger;
+      try {
+        const { name, fatherName, phoneNumber, image, address, disease, reference } = passenger;
 
-      if (!name || !fatherName || !phoneNumber || !image || !address || !disease || !reference) {
-        return res.status(400).json({ error: "All fields including image are required." });
+        if (!name || !fatherName || !phoneNumber || !image || !address || !disease || !reference) {
+          throw new Error("All fields including image are required.");
+        }
+
+        // Generate a unique 12-character registration number
+        const registrationNumber = nanoid(12);
+
+        const newStudent = new Student({
+          name,
+          fatherName,
+          phoneNumber,
+          registrationNumber,
+          image,
+          address,
+          consent,
+          disease,
+          reference,
+        });
+
+        const savedStudent = await newStudent.save();
+        savedPassengers.push({
+          registrationNumber: savedStudent.registrationNumber,
+        });
+      } catch (err) {
+        if (err.code === 11000) {
+          errors.push(
+            `Duplicate registration number: ${err.keyValue.registrationNumber}`
+          );
+        } else {
+          errors.push(err.message || "Error saving passenger.");
+        }
       }
-
-      // Generate a unique registration number using nanoid
-      const registrationNumber = nanoid(12);
-
-      const newStudent = new Student({
-        name,
-        fatherName,
-        phoneNumber,
-        registrationNumber,
-        image,
-        address,
-        consent,
-        disease,
-        reference,
-      });
-
-      const savedStudent = await newStudent.save();
-      savedPassengers.push({
-        registrationNumber: savedStudent.registrationNumber,
-      });
     }
 
-    res.json({ registrationNumbers: savedPassengers.map((student) => student.registrationNumber) });
+    res.status(207).json({
+      success: savedPassengers,
+      errors,
+    });
   } catch (err) {
-    console.error("Error saving passengers:", err);
-    res.status(500).json({ error: "Internal server error." });
-  }
-});
-
-// Endpoint to retrieve student by registration number
-app.get("/api/students/:registrationNumber", async (req, res) => {
-  const { registrationNumber } = req.params;
-
-  try {
-    const student = await Student.findOne({ registrationNumber });
-    if (!student) {
-      return res.status(404).json({ error: "Student not found." });
-    }
-
-    res.json(student);
-  } catch (err) {
-    console.error("Error fetching student:", err);
+    console.error("Error processing passengers:", err);
     res.status(500).json({ error: "Internal server error." });
   }
 });
