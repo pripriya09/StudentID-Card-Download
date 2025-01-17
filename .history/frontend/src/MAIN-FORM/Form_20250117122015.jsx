@@ -2,8 +2,8 @@ import React, { useState, useRef } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import axios from "axios";
-import "./App.css";
-
+import ""
+import { useNavigate } from "react-router-dom";
 const Form = () => {
   const [count, setCount] = useState(1); // Number of passengers
   const [consent, setConsent] = useState(false);
@@ -22,7 +22,10 @@ const Form = () => {
   );
   const [idCardData, setIdCardData] = useState(null);
   const fileInputRefs = useRef([]);
-
+  const navigate = useNavigate();
+  const handlePassengerButtonClick = () => {
+    navigate("/passengers"); // Navigate to the PassengerTable page
+  };
   const handleCountChange = (e) => {
     let value = parseInt(e.target.value, 10);
   
@@ -245,6 +248,9 @@ const Form = () => {
   required
 />
 </label>
+<button type="button" onClick={handlePassengerButtonClick}>
+          Passengers
+        </button>
 </div>
         <form onSubmit={handleSubmit}>
           {formData.map((data, index) => (
@@ -433,7 +439,7 @@ const Form = () => {
       {/* ID Card Details */}
       <tr>
         {/* Profile Image Column */}
-        <td colSpan="1" rowspan="5" style={{ textAlign: "center" }}>
+        <td colSpan="1" rowSpan="5" style={{ textAlign: "center" }}>
           <img src={data.image || './shyam.jpg'} className="profile-img" alt="Profile" />
         </td>
 
