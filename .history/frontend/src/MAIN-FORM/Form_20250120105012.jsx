@@ -23,7 +23,6 @@ const Form = () => {
   const [idCardData, setIdCardData] = useState(null);
   const fileInputRefs = useRef([]);
   const navigate = useNavigate();
-
   const handlePassengerButtonClick = () => {
     navigate("/passengers"); // Navigate to the PassengerTable page
   };
@@ -113,19 +112,13 @@ const Form = () => {
         alert("Passengers registered successfully.");
         console.log("Response Data:", response.data);
 
-        // setFormData((prevData) =>
-        //   prevData.map((data, index) => ({
-        //     ...data,
-        //     registrationNumber: response.data.registrationNumbers[index],
-        //   }))
-        // );
-        // Mark the form as successfully submitted
         const updatedFormData = formData.map((data, index) => ({
           ...data,
           registrationNumber: response.data.registrationNumbers[index],
         }));
   
         setFormData(updatedFormData);
+        // Mark the form as successfully submitted
         setIsSubmitted(true);
             if (formData.length > 0) {
           navigate("/cards",  { state: { formData: updatedFormData } });

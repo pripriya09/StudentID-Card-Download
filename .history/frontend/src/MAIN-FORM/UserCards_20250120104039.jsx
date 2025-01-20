@@ -1,13 +1,9 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import "./App.css";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-import { useNavigate } from "react-router-dom";
 const UserCards = () => {
   const location = useLocation();
-  const { formData } = location.state || {}; 
-    const navigate = useNavigate();
+  const { formData } = location.state || {}; // Retrieve formData from location state
 
   if (!formData || formData.length === 0) {
     return <p>No passenger data available.</p>;
@@ -67,11 +63,30 @@ const UserCards = () => {
   
       // Save the PDF
       pdf.save("Passenger_ID_Cards.pdf");
-      navigate("/");
+  
+      // Reset form to default state after download
+      setFormData([
+        {
+          name: "",
+          fatherName: "",
+          phoneNumber: "",
+          address: "",
+          disease: "",
+          reference: "",
+          image: null,
+          registrationNumber: "",
+        },
+      ]);
+      setConsent(false); // Reset consent checkbox
+      setCount(1); // Set passenger count back to 1
+  
+      // Reset file inputs (clear image fields)
+      if (fileInputRefs.current) {
+        fileInputRefs.current.forEach((ref) => (ref.value = "")); // Clear file inputs
+      }
+      setIsSubmitted(false); 
     });
   };
-
-
   return (<>
     <div className="download-pdf">
           <button className="id-print-btn" onClick={handleDownloadPDF}>

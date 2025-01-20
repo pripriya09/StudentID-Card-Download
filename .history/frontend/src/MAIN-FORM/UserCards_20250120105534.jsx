@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 const UserCards = () => {
   const location = useLocation();
   const { formData } = location.state || {}; 
-    const navigate = useNavigate();
 
   if (!formData || formData.length === 0) {
     return <p>No passenger data available.</p>;

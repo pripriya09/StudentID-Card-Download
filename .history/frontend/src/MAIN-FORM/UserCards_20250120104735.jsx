@@ -3,11 +3,9 @@ import { useLocation } from "react-router-dom";
 import "./App.css";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { useNavigate } from "react-router-dom";
 const UserCards = () => {
   const location = useLocation();
-  const { formData } = location.state || {}; 
-    const navigate = useNavigate();
+  const { formData } = location.state || {}; // Retrieve formData from location state
 
   if (!formData || formData.length === 0) {
     return <p>No passenger data available.</p>;
@@ -67,11 +65,14 @@ const UserCards = () => {
   
       // Save the PDF
       pdf.save("Passenger_ID_Cards.pdf");
-      navigate("/");
+  
+      // Clear the page by resetting formData
+      setTimeout(() => {
+        alert("PDF downloaded successfully! Resetting the page.");
+        window.location.reload(); // Reloads the page to reset it
+      }, 500);
     });
   };
-
-
   return (<>
     <div className="download-pdf">
           <button className="id-print-btn" onClick={handleDownloadPDF}>

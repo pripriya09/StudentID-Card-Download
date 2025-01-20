@@ -3,11 +3,9 @@ import { useLocation } from "react-router-dom";
 import "./App.css";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { useNavigate } from "react-router-dom";
 const UserCards = () => {
   const location = useLocation();
   const { formData } = location.state || {}; 
-    const navigate = useNavigate();
 
   if (!formData || formData.length === 0) {
     return <p>No passenger data available.</p>;
@@ -67,7 +65,7 @@ const UserCards = () => {
   
       // Save the PDF
       pdf.save("Passenger_ID_Cards.pdf");
-      navigate("/");
+  nagiva
     });
   };
 

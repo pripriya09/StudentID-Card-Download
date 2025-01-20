@@ -23,7 +23,6 @@ const Form = () => {
   const [idCardData, setIdCardData] = useState(null);
   const fileInputRefs = useRef([]);
   const navigate = useNavigate();
-
   const handlePassengerButtonClick = () => {
     navigate("/passengers"); // Navigate to the PassengerTable page
   };
